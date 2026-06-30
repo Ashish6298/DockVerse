@@ -1,0 +1,31 @@
+{
+  "name": "@dockverse/api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/server.js",
+  "types": "./dist/server.d.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@dockverse/config": "*",
+    "@dockverse/docker-client": "*",
+    "@dockverse/types": "*",
+    "@dockverse/utils": "*",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pino": "^8.19.0",
+    "socket.io": "^4.7.5",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.24",
+    "pino-pretty": "^10.3.1",
+    "tsx": "^4.7.1"
+  }
+}
