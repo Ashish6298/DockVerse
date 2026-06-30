@@ -2,6 +2,7 @@ import { createDockerClient, Dockerode } from '@dockverse/docker-client';
 import { DockerInfo, DockerStatus, DashboardSummary } from '@dockverse/types';
 import config from '../config/index.js';
 import logger from '../utils/logger.js';
+import { DockerConnectionError } from '../utils/errors.js';
 
 class DockerService {
   private client;
@@ -38,7 +39,7 @@ class DockerService {
   public async getDockerInfo(): Promise<DockerInfo> {
     await this.checkConnection();
     if (this.status === 'disconnected') {
-      throw new Error('Docker daemon is not running or unreachable');
+      throw new DockerConnectionError();
     }
 
     const versionInfo = await this.client.version();
@@ -85,7 +86,7 @@ class DockerService {
 
   public async getContainerSummary() {
     await this.checkConnection();
-    if (this.status === 'disconnected') throw new Error('Docker daemon is unreachable');
+    if (this.status === 'disconnected') throw new DockerConnectionError('Docker daemon is unreachable');
     const list = await this.client.listContainers({ all: true });
     return {
       total: list.length,
@@ -97,7 +98,7 @@ class DockerService {
 
   public async getImageSummary() {
     await this.checkConnection();
-    if (this.status === 'disconnected') throw new Error('Docker daemon is unreachable');
+    if (this.status === 'disconnected') throw new DockerConnectionError('Docker daemon is unreachable');
     const list = await this.client.listImages({ all: true });
     return {
       total: list.length,
@@ -106,7 +107,7 @@ class DockerService {
 
   public async getNetworkSummary() {
     await this.checkConnection();
-    if (this.status === 'disconnected') throw new Error('Docker daemon is unreachable');
+    if (this.status === 'disconnected') throw new DockerConnectionError('Docker daemon is unreachable');
     const list = await this.client.listNetworks();
     return {
       total: list.length,
@@ -115,7 +116,7 @@ class DockerService {
 
   public async getVolumeSummary() {
     await this.checkConnection();
-    if (this.status === 'disconnected') throw new Error('Docker daemon is unreachable');
+    if (this.status === 'disconnected') throw new DockerConnectionError('Docker daemon is unreachable');
     const list = await this.client.listVolumes();
     return {
       total: (list.Volumes || []).length,

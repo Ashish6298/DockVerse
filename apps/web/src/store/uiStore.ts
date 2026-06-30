@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { DockerStatus } from '@dockverse/types';
+import type { DockerStatus } from '@dockverse/types';
 
 interface UIState {
   sidebarCollapsed: boolean;

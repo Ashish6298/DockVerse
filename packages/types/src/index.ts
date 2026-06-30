@@ -51,11 +51,3 @@ export interface ApiErrorResponse {
   code?: string;
 }
 
-export const SOCKET_EVENTS = {
-  CONNECT: 'connect',
-  DISCONNECT: 'disconnect',
-  DOCKER_STATUS: 'docker:status',
-  DOCKER_REFRESH: 'docker:refresh',
-} as const;
-
-export type SocketEvents = typeof SOCKET_EVENTS[keyof typeof SOCKET_EVENTS];

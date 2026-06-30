@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { 
   Server, 
   Cpu, 
   HardDrive, 
   Activity, 
-  Box, 
   Layers, 
   Network, 
   FolderSync,
@@ -15,14 +13,12 @@ import {
   StopCircle,
   FileBadge
 } from 'lucide-react';
-import { fetchDashboardData } from '../api/client';
-import { socketService } from '../websocket/socketService';
 import { useUIStore } from '../store/uiStore';
+import { useDockerTelemetry } from '../hooks/useDockerTelemetry';
 import { DashboardCard } from '../components/dashboard/DashboardCard';
 import { LoadingState } from '../components/status/LoadingState';
 import { ErrorState } from '../components/status/ErrorState';
 import { formatBytes } from '@dockverse/utils';
-import { DashboardSummary } from '@dockverse/types';
 
 interface DashboardPageProps {
   onRefresh: () => void;
@@ -30,42 +26,18 @@ interface DashboardPageProps {
 }
 
 export function Dashboard({ onRefresh, isRefreshing }: DashboardPageProps) {
-  const queryClient = useQueryClient();
   const setDockerStatus = useUIStore((state) => state.setDockerStatus);
   const triggerRefreshState = useUIStore((state) => state.triggerRefresh);
 
-  const { data, isLoading, error, refetch, isFetching } = useQuery<DashboardSummary>({
-    queryKey: ['dashboard'],
-    queryFn: fetchDashboardData,
-    refetchInterval: 15000, // Background REST fallback refetch every 15s
-  });
+  const { data, isLoading, error, refetch, isFetching } = useDockerTelemetry();
 
-  // Handle Socket.IO connection and events
-  useEffect(() => {
-    socketService.connect();
-
-    const handleSocketUpdate = (statusData: DashboardSummary) => {
-      console.log('🔄 Websocket triggered dashboard data update');
-      queryClient.setQueryData(['dashboard'], statusData);
-      if (statusData.status) {
-        setDockerStatus(statusData.status);
-      }
-      triggerRefreshState();
-    };
-
-    socketService.subscribeToStatus(handleSocketUpdate);
-
-    return () => {
-      socketService.unsubscribeFromStatus(handleSocketUpdate);
-    };
-  }, [queryClient, setDockerStatus, triggerRefreshState]);
-
-  // Sync state with Zustand
+  // Sync state with Zustand and update refresh timestamp
   useEffect(() => {
     if (data) {
       setDockerStatus(data.status);
+      triggerRefreshState();
     }
-  }, [data, setDockerStatus]);
+  }, [data, setDockerStatus, triggerRefreshState]);
 
   const handleManualRetry = async () => {
     try {

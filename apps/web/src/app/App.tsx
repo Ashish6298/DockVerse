@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Shell } from '../components/layout/Shell';
 import { Dashboard } from '../pages/Dashboard';
-import { socketService } from '../websocket/socketService';
 import { useUIStore } from '../store/uiStore';
 
 const queryClient = new QueryClient();
@@ -14,8 +13,6 @@ export function App() {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    // Request refresh via socket
-    socketService.requestRefresh();
     // Invalidate react query cache
     await queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     setTimeout(() => {

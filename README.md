@@ -84,13 +84,14 @@ All API responses strictly follow a unified format:
 - `GET /api/v1/docker/version` - Return Docker version and API version details.
 - `GET /api/v1/docker/info` - Return full raw Dockerode system information.
 
-## WebSocket Updates
-- Namespace: `/docker`
-- Event `docker:status`: Emitted periodically when status updates or on client requests.
-- Event `docker:refresh`: Emitted by the client to trigger a full refresh of Docker metrics.
+## Communication Strategy & Polling
+- **Communication Protocol**: REST APIs are used for all frontend-backend interactions. WebSockets are intentionally excluded from Phase 1 through Phase 10 because they are unnecessary for the current product goals. Bidirectional communication will only be evaluated in the future if interactive terminal sessions or streaming features require it.
+- **State Management & Caching**: TanStack Query serves as the single source of truth for server state.
+- **Telemetry Polling**: Option-based periodic queries (e.g. every 5 seconds) keep dashboard cards updated without UI lag or manual actions.
+- **Manual Actions**: The Refresh button triggers immediate REST refetches.
 
 ## Future Roadmap (Phase 2+)
 - **Workspace Manager**: Create and manage groups of Docker resources.
-- **Container Studio**: Edit, build, and run Dockerfiles and docker-compose files visually.
-- **Docker Doctor**: AI-assisted container log auditing and issue diagnosing.
-- **Monitoring & telemetry**: Real-time stats streams for CPU, RAM, Network, and Disk.
+- **Container Studio**: Edit, run, and review Dockerfiles and compose setups.
+- **Docker Doctor**: Container audits and issue diagnostics.
+- **Monitoring & telemetry**: Periodic resource monitoring for CPU, RAM, Network, and Disk.

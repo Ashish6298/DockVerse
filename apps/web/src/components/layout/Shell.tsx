@@ -24,7 +24,6 @@ import {
   Moon
 } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
-import { socketService } from '../../websocket/socketService';
 
 interface ShellProps {
   children: React.ReactNode;

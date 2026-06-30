@@ -1,12 +1,10 @@
 import express from 'express';
 import { createServer } from 'http';
-import { Server } from 'socket.io';
 import cors from 'cors';
 import config from './config/index.js';
 import logger from './utils/logger.js';
 import router from './routes/docker.routes.js';
 import errorHandler from './middleware/error.middleware.js';
-import setupDockerSocket from './sockets/docker.socket.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -31,16 +29,6 @@ app.use('/api/v1', router);
 // Error Handler
 app.use(errorHandler);
 
-// Setup Socket.IO
-const io = new Server(httpServer, {
-  cors: {
-    origin: config.CORS_ORIGIN,
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-});
-
-setupDockerSocket(io);
 
 // Server startup
 const PORT = config.PORT;

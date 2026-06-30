@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertCircle, RefreshCw, Terminal, ArrowUpRight } from 'lucide-react';
+import { AlertCircle, RefreshCw, Terminal } from 'lucide-react';
 
 interface ErrorStateProps {
   onRetry: () => void;

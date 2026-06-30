@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import logger from '../utils/logger.js';
 import { ApiErrorResponse } from '@dockverse/types';
+import { AppError } from '../utils/errors.js';
 
 export function errorHandler(
   err: Error,
@@ -9,8 +10,17 @@ export function errorHandler(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ): void {
-  const status = 500;
+  let status = 500;
+  let code = 'INTERNAL_SERVER_ERROR';
   const message = err.message || 'Internal Server Error';
+
+  if (err instanceof AppError) {
+    status = err.status;
+    code = err.code;
+  } else if (message.includes('Docker daemon') || message.includes('unreachable')) {
+    status = 503;
+    code = 'DOCKER_CONNECTION_ERROR';
+  }
 
   logger.error({ err, path: req.path, method: req.method }, 'Request error occurred');
 
@@ -18,6 +28,7 @@ export function errorHandler(
     success: false,
     timestamp: new Date().toISOString(),
     message,
+    code,
     error: process.env.NODE_ENV !== 'production' ? err.stack : undefined,
   };
 
