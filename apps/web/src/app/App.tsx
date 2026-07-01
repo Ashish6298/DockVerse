@@ -10,6 +10,7 @@ import { Volumes } from '../features/volumes/pages/Volumes';
 import { DockerfileStudio } from '../features/dockerfiles/pages/DockerfileStudio';
 import { ComposeStudio } from '../features/compose/pages/ComposeStudio';
 import { MonitoringDashboard } from '../features/monitoring/pages/MonitoringDashboard';
+import { RegistryDashboard } from '../features/registry/pages/RegistryDashboard';
 import { useUIStore } from '../store/uiStore';
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ export function App() {
     await queryClient.invalidateQueries({ queryKey: ['dockerfileBuildHistory'] });
     await queryClient.invalidateQueries({ queryKey: ['composeHistory'] });
     await queryClient.invalidateQueries({ queryKey: ['monitoringSummary'] });
+    await queryClient.invalidateQueries({ queryKey: ['registryProviders'] });
     setTimeout(() => {
       setIsRefreshing(false);
     }, 1000);
@@ -57,6 +59,8 @@ export function App() {
         return <ComposeStudio />;
       case 'monitoring':
         return <MonitoringDashboard />;
+      case 'registry':
+        return <RegistryDashboard />;
       default:
         return (
           <div className="flex flex-col items-center justify-center h-full text-slate-500">

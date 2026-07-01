@@ -56,7 +56,7 @@ export function Shell({ children, activeRoute, onNavigate, onRefresh, isRefreshi
     { id: 'inspector', name: 'Inspector', icon: Search, disabled: true },
     { id: 'doctor', name: 'Docker Doctor', icon: HeartPulse, disabled: true },
     { id: 'snapshots', name: 'Snapshots', icon: Camera, disabled: true },
-    { id: 'registry', name: 'Registry Explorer', icon: Globe, disabled: true },
+    { id: 'registry', name: 'Registry Explorer', icon: Globe },
     { id: 'plugins', name: 'Plugins', icon: Blocks, disabled: true },
     { id: 'docs', name: 'Documentation', icon: BookOpen, disabled: true },
     { id: 'settings', name: 'Settings', icon: Settings, disabled: true },

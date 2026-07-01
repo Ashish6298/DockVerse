@@ -8,6 +8,7 @@ import volumeRouter from './volume.routes.js';
 import dockerfileRouter from './dockerfile.routes.js';
 import composeRouter from './compose.routes.js';
 import monitoringRouter from './monitoring.routes.js';
+import registryRouter from '../registry/registry.router.js';
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.use(volumeRouter);
 router.use(dockerfileRouter);
 router.use(composeRouter);
 router.use(monitoringRouter);
+router.use(registryRouter);
 
 export default router;

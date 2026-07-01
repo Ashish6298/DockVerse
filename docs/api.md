@@ -83,6 +83,18 @@ All communication with the DockVerse API must follow versioned, uniform structur
 | **GET** | `/compose/history` | Fetch history logs | `200` |
 | **GET** | `/monitoring/summary` | Fetch global host metrics telemetry summary | `200` |
 | **GET** | `/monitoring/containers/:id/stats` | Fetch rolling metric history for a running container | `200`, `404` |
+| **GET** | `/registry/providers` | Retrieve list of registry providers | `200` |
+| **POST** | `/registry/login` | Authenticate registry credential connections | `200`, `400` |
+| **POST** | `/registry/logout/:providerId` | Close connection state cache session | `200` |
+| **GET** | `/registry/auth/:providerId` | Retrieve provider session credentials auth state | `200` |
+| **POST** | `/registry/search` | Search provider catalog repositories | `200`, `400` |
+| **GET** | `/registry/tags` | List tag versions for a repository | `200`, `400` |
+| **GET** | `/registry/manifest` | Retrieve detailed layer digest manifest info | `200`, `400` |
+| **POST** | `/registry/pull` | Spawn background Dockerode image pull operation | `201`, `400` |
+| **POST** | `/registry/push` | Spawn background Dockerode image push operation | `201`, `400` |
+| **GET** | `/registry/operation/:operationId` | Poll background transfer progress log outputs | `200`, `404` |
+| **GET** | `/registry/ratelimit` | Check API pull/push rate limits | `200` |
+| **GET** | `/registry/health` | Check registry connection health telemetry | `200` |
 
 ---
 

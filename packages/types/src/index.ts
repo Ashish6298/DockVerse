@@ -390,6 +390,76 @@ export interface MonitoringSummary {
   runningContainersCount: number;
 }
 
+export interface RegistryProvider {
+  id: string;
+  name: string;
+  description: string;
+  status: 'connected' | 'disconnected';
+  url: string;
+}
+
+export interface RegistryRepository {
+  name: string;
+  namespace?: string;
+  description?: string;
+  starsCount?: number;
+  pullsCount?: number;
+}
+
+export interface RegistryTag {
+  name: string;
+  digest: string;
+  sizeBytes?: number;
+  lastUpdated?: string;
+}
+
+export interface RegistryLayer {
+  mediaType: string;
+  digest: string;
+  sizeBytes: number;
+}
+
+export interface RegistryManifest {
+  schemaVersion: number;
+  mediaType: string;
+  configDigest?: string;
+  layers: RegistryLayer[];
+}
+
+export interface RegistryOperation {
+  operationId: string;
+  status: 'running' | 'success' | 'failed';
+  logs: string[];
+  error?: string;
+}
+
+export interface RegistryAuthentication {
+  username?: string;
+  email?: string;
+  token?: string;
+}
+
+export interface RegistrySearchResult {
+  totalCount: number;
+  repositories: RegistryRepository[];
+}
+
+export interface RegistryHealth {
+  status: 'ok' | 'degraded' | 'down';
+}
+
+export interface RegistryRateLimit {
+  limit: number;
+  remaining: number;
+  resetTime?: string;
+}
+
+export interface RegistryError {
+  message: string;
+  code: string;
+}
+
+
 
 
 
