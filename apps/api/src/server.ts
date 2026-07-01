@@ -1,9 +1,10 @@
 import express from 'express';
 import { createServer } from 'http';
 import cors from 'cors';
+import mongoose from 'mongoose';
 import config from './config/index.js';
 import logger from './utils/logger.js';
-import router from './routes/docker.routes.js';
+import router from './routes/index.js';
 import errorHandler from './middleware/error.middleware.js';
 
 const app = express();
@@ -29,6 +30,18 @@ app.use('/api/v1', router);
 // Error Handler
 app.use(errorHandler);
 
+// Connect to MongoDB
+if (config.MONGO_URI) {
+  mongoose.connect(config.MONGO_URI)
+    .then(() => {
+      logger.info('🔌 Connected to MongoDB for metadata storage');
+    })
+    .catch((err) => {
+      logger.error({ err }, '❌ MongoDB connection failure. Operating in fallback mode.');
+    });
+} else {
+  logger.warn('⚠️ MONGO_URI not configured. Workspaces will not persist.');
+}
 
 // Server startup
 const PORT = config.PORT;
@@ -39,8 +52,14 @@ const server = httpServer.listen(PORT, () => {
 // Graceful Shutdown
 const shutdown = (signal: string) => {
   logger.info(`Received ${signal}. Shutting down gracefully...`);
-  server.close(() => {
+  server.close(async () => {
     logger.info('HTTP server closed.');
+    try {
+      await mongoose.disconnect();
+      logger.info('MongoDB connection closed.');
+    } catch (err) {
+      logger.error({ err }, 'Error closing MongoDB connection');
+    }
     process.exit(0);
   });
 
@@ -53,3 +72,4 @@ const shutdown = (signal: string) => {
 
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
+
