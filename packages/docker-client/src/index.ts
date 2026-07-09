@@ -1,6 +1,15 @@
 import Dockerode from 'dockerode';
 import os from 'os';
 
+// Augment the Dockerode typings locally for plugins support
+declare module 'dockerode' {
+  interface Dockerode {
+    getPluginPrivileges(remoteName: string): Promise<any>;
+    installPlugin(remoteName: string, options: any, callback?: (err: any, stream: any) => void): void;
+    listPlugins(options?: any): Promise<any[]>;
+  }
+}
+
 export interface DockerClientOptions {
   socketPath?: string;
   host?: string;

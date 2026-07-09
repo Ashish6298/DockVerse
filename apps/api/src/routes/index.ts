@@ -9,6 +9,15 @@ import dockerfileRouter from './dockerfile.routes.js';
 import composeRouter from './compose.routes.js';
 import monitoringRouter from './monitoring.routes.js';
 import registryRouter from '../registry/registry.router.js';
+import pluginRouter from './plugin.routes.js';
+import swarmRouter from './swarm.routes.js';
+import resourceRouter from './resource.routes.js';
+import stackRouter from './stack.routes.js';
+import backupRouter from './backup.routes.js';
+import securityRouter from './security.routes.js';
+import eventRouter from './event.routes.js';
+import policyRouter from './policy.routes.js';
+import hostRouter from './host.routes.js';
 
 const router = Router();
 
@@ -22,5 +31,14 @@ router.use(dockerfileRouter);
 router.use(composeRouter);
 router.use(monitoringRouter);
 router.use(registryRouter);
+router.use(pluginRouter);
+router.use(swarmRouter);
+router.use(resourceRouter);
+router.use(stackRouter);
+router.use(backupRouter);
+router.use(securityRouter);
+router.use(eventRouter);
+router.use(policyRouter);
+router.use(hostRouter);
 
 export default router;

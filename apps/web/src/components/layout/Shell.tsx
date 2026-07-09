@@ -21,7 +21,12 @@ import {
   ChevronLeft,
   RefreshCw,
   Sun,
-  Moon
+  Moon,
+  Server,
+  KeyRound,
+  Shield,
+  Clock,
+  ShieldAlert
 } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
 
@@ -57,7 +62,15 @@ export function Shell({ children, activeRoute, onNavigate, onRefresh, isRefreshi
     { id: 'doctor', name: 'Docker Doctor', icon: HeartPulse, disabled: true },
     { id: 'snapshots', name: 'Snapshots', icon: Camera, disabled: true },
     { id: 'registry', name: 'Registry Explorer', icon: Globe },
-    { id: 'plugins', name: 'Plugins', icon: Blocks, disabled: true },
+    { id: 'plugins', name: 'Plugins', icon: Blocks },
+    { id: 'swarm', name: 'Swarm Manager', icon: Server },
+    { id: 'resources', name: 'Secrets & Configs', icon: KeyRound },
+    { id: 'stacks', name: 'Stack Manager', icon: Layers },
+    { id: 'backups', name: 'Backup & Recovery', icon: Shield },
+    { id: 'security', name: 'Security Center', icon: Shield },
+    { id: 'events', name: 'Event Center', icon: Clock },
+    { id: 'policies', name: 'Policy Center', icon: ShieldAlert },
+    { id: 'hosts', name: 'Remote Hosts', icon: Server },
     { id: 'docs', name: 'Documentation', icon: BookOpen, disabled: true },
     { id: 'settings', name: 'Settings', icon: Settings, disabled: true },
     { id: 'about', name: 'About', icon: Info, disabled: true },
