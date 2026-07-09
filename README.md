@@ -1,97 +1,122 @@
-# DockVerse — Phase 1 Connection Dashboard
+# DockVerse Enterprise
 
-DockVerse is a professional developer workspace centered around Docker, designed to look and feel like an IDE (similar to VS Code). It acts as a central hub for containerized application development.
+DockVerse is a professional, open-source enterprise Docker management platform and modern web-based Docker Desktop alternative. It allows engineers and administrators to manage local and remote Docker environments, build Dockerfiles, compose multi-container deployments, and audit daemon governance through a single clean interface.
 
-Phase 1 establishes a production-quality connection dashboard showing real-time system details from the Docker Engine, gracefully handling offline/disconnected daemon states.
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev/)
+[![Docker](https://img.shields.io/badge/Docker-Engine-blue.svg)](https://www.docker.com/)
 
-## Monorepo Project Architecture
+---
 
-The workspace utilizes npm Workspaces to share code cleanly between the frontend React application, Node/Express API server, and internal configurations:
+## Table of Contents
+- [Features](#features)
+- [Monorepo Architecture](#monorepo-architecture)
+- [Folder Structure](#folder-structure)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Development Setup](#development-setup)
+- [Production Build](#production-build)
+- [State Management Paradigm](#state-management-paradigm)
+- [Roadmap](#roadmap)
+- [License](#license)
 
-```text
-dockverse/
+---
+
+## Features
+- **Dashboard**: High-level overview of running containers, images, volumes, and cpu/memory usage.
+- **Workspace Manager**: Group local containers and resources by logical environments.
+- **Container & Image Manager**: Dynamic lifecycle execution, static inspection, logs viewing, and image registry downloads.
+- **Dockerfile & Compose Studio**: YAML validation editor, builds automation, and stack runtimes orchestration.
+- **Registry Explorer**: Centralized management for Docker Hub, GitHub Package Registry, or private registries.
+- **Swarm Manager**: Node provisioning, service tasks scheduling, and overlay network configurations.
+- **Disaster Recovery**: Automatic volume backup schedules, compression, and decryption checks.
+- **Security & Compliance Center**: Audit host daemons against CIS Docker Benchmarks and scan images for vulnerabilities.
+- **Remote Hosts Fleet Manager**: Multi-cluster dashboard with TLS and SSH connection tunneling.
+
+---
+
+## Monorepo Architecture
+
+DockVerse is organized as an npm workspaces monorepo:
+- **`apps/api`**: Express backend application exposing versioned JSON endpoints.
+- **`apps/web`**: React SPA application built with Vite and TailwindCSS.
+- **`packages/types`**: Unified, shared TypeScript definitions.
+- **`packages/docker-client`**: Abstracted wrapper surrounding Dockerode.
+
+---
+
+## Folder Structure
+```
+DockVerse/
 ├── apps/
-│   ├── web/           # React + TS + Vite + Tailwind CSS + Zustand + TanStack Query
-│   └── api/           # Node.js + TS + Express + Dockerode + Socket.IO + Pino
+│   ├── api/          # Express backend API
+│   └── web/          # React SPA frontend
 ├── packages/
-│   ├── types/         # Shared TypeScript interfaces (DockerInfo, ApiResponse, etc.)
-│   ├── utils/         # Helper functions (memory size formatting, durations)
-│   ├── config/        # Environment variable schemas and validation via Zod
-│   └── docker-client/ # Pluggable Dockerode client instance creator
-├── README.md
-└── .env.example
+│   ├── types/        # Shared models/interfaces
+│   └── docker-client # Isolated Dockerode wrapper
+├── backups/          # Local SQLite/JSON backup metadata
+├── package.json
+└── tsconfig.json
 ```
 
-## Getting Started
+---
 
-### Prerequisites
-- Node.js (v20+ or v24+)
-- npm (v10+ or v11+)
-- Docker Engine / Docker Desktop (optional, app remains functional when offline)
+## Prerequisites
+- **Node.js** >= 18.x
+- **npm** >= 9.x
+- **Docker Engine / Desktop**
+- **MongoDB** >= 6.x
 
-### Installation
-1. Install monorepo dependencies:
-   ```bash
-   npm install --legacy-peer-deps
-   ```
-2. Copy the environment file template:
-   ```bash
-   cp .env.example .env
-   ```
-3. Compile all packages:
-   ```bash
-   npm run build
-   ```
+---
 
-### Running the Application
-To run both the backend API and the frontend client concurrently:
+## Installation
+Clone the repository:
+```bash
+git clone https://github.com/dockverse/dockverse.git
+cd dockverse
+npm install
+```
+
+Configure environment:
+```bash
+cp .env.example .env
+# Edit .env variables
+```
+
+---
+
+## Development Setup
+Start the local API and Frontend dev servers concurrently:
 ```bash
 npm run dev
 ```
 
-Alternatively, you can run them individually:
-- Run API: `npm run dev --workspace=@dockverse/api`
-- Run Web: `npm run dev --workspace=@dockverse/web`
+---
 
-## REST API Documentation
-
-All API responses strictly follow a unified format:
-
-### Success Schema
-```json
-{
-  "success": true,
-  "timestamp": "2026-06-30T12:00:00.000Z",
-  "message": "Retrieval success",
-  "data": { ... }
-}
+## Production Build
+Compile all typescript workspaces and generate production web bundles:
+```bash
+npm run build
 ```
 
-### Error Schema
-```json
-{
-  "success": false,
-  "timestamp": "2026-06-30T12:00:00.000Z",
-  "message": "Error description",
-  "error": "Stack trace (development mode only)"
-}
-```
+---
 
-### Endpoints
-- `GET /api/v1/health` - Check health status of API and Docker connection.
-- `GET /api/v1/docker/status` - Return if Docker is `'connected'` or `'disconnected'`.
-- `GET /api/v1/docker/dashboard` - Return complete statistics summary for dashboard cards.
-- `GET /api/v1/docker/version` - Return Docker version and API version details.
-- `GET /api/v1/docker/info` - Return full raw Dockerode system information.
+## State Management Paradigm
+DockVerse adheres to a strict separation of state concerns:
+1. **React Query** manages server state (caching, query invalidations, optimistic mutations, and background polling).
+2. **Zustand** is utilized exclusively for UI-only state (modals toggles, dark/light theme, active workspace selection, sidebar collapsed status).
 
-## Communication Strategy & Polling
-- **Communication Protocol**: REST APIs are used for all frontend-backend interactions. WebSockets are intentionally excluded from Phase 1 through Phase 10 because they are unnecessary for the current product goals. Bidirectional communication will only be evaluated in the future if interactive terminal sessions or streaming features require it.
-- **State Management & Caching**: TanStack Query serves as the single source of truth for server state.
-- **Telemetry Polling**: Option-based periodic queries (e.g. every 5 seconds) keep dashboard cards updated without UI lag or manual actions.
-- **Manual Actions**: The Refresh button triggers immediate REST refetches.
+---
 
-## Future Roadmap (Phase 2+)
-- **Workspace Manager**: Create and manage groups of Docker resources.
-- **Container Studio**: Edit, run, and review Dockerfiles and compose setups.
-- **Docker Doctor**: Container audits and issue diagnostics.
-- **Monitoring & telemetry**: Periodic resource monitoring for CPU, RAM, Network, and Disk.
+## Roadmap
+- [x] Swarm Stacks deployment
+- [x] Incremental volume backups
+- [x] Custom policy violations rules builder
+- [x] Multi-cluster remote host connections
+- [ ] AI-assisted Dockerfile and Compose YAML generator
+
+---
+
+## License
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.

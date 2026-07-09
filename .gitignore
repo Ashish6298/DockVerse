@@ -30,3 +30,18 @@ build/
 # OS Files
 .DS_Store
 Thumbs.db
+
+# Local Databases, Backups, and State
+backups/
+*.json.bak
+
+# Local Audit and Testing Reports
+DOCKVERSE_RELEASE_CANDIDATE_RC1_AUDIT_REPORT.txt
+phase15-testing-report.txt
+phase16-testing-report.txt
+phase17-testing-report.txt
+DOCKVERSE PHASE 18 ENTERPRISE TESTING AND QUALITY REPORT.txt
+DOCKVERSE_PHASE_19_ENTERPRISE_TESTING_AND_QUALITY_REPORT.txt
+
+# Local log files
+*.log
